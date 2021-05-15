@@ -8,19 +8,24 @@ from finviz.screener import Screener
 filters = Screener.load_filter_dict()
 
 # Welcome message:
-print("Welcome to the program!")
+print("Welcome to the program! Today, we will help you make an investment plan.")
+
+print("First, what is your investment timeframe? Your three choices are as follows:")
+print("    1. I plan to hold my investments for under 3 months")
+print("    2. I plan to hold my investments for 3-12 months.")
+print("    3. I plan to hold my investments for over 1  year.")
 
 # Determining investment timeframe (which will cause the algorithm to vary)
-timeframe = input("What is your timeframe? Please enter 1, 2, or 3 depending on how many months you intend to hold: ")
+timeframe = input("Please enter 1, 2, or 3 depending on how many months you intend to hold: ")
 
 # Data validation for timeframe
 if timeframe == "1" or timeframe == "2" or timeframe == "3":
     print("Thank you. You have indicated that you plan to invest for ", timeframe, "months.")
     print(" ")
 else:
-    print("That is not a valid input. We will proceed with a default value of 3 months.")
+    print("That is not a valid input. We will proceed with a default value of under 3 months.")
     print(" ")
-    timeframe = "3"
+    timeframe = "1"
     
 # Figuring out how much $ the user wishes to invest. This will determine the recommendation of how many investments to select
 amount = input("How much money do you plan to invest? $")
