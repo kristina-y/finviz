@@ -1,5 +1,12 @@
 #Here is my program:
 
+# Defining a function.
+# This will be necessary later on
+def negative_sharpe(weights):
+    weights = np.array(weights)
+    pret = np.dot(weights, mu)
+    pvol = np.sqrt(np.dot(weights,np.dot(VarCov, weights.T)))
+    return -(pret-rf)/pvol
 
 from finviz.screener import Screener
 
@@ -31,12 +38,21 @@ else:
 amount = input("How much money do you plan to invest? $")
 
 #Data validation for amount
-if float(amount) < 1000000000 and float(amount) > 0:
-    print("You have entered that you wish to invest $", amount, ".")
-    amount = float(amount)
-else:
+try:
+    float(amount)
+    
+    if float(amount) > 0:
+        print("You have entered that you wish to invest $", amount, ".")
+        amount = float(amount)
+    else:
+        print("You have entered a negative or 0 value. Using a default value of $1,000 instead.")
+        amount = 1000
+except:
     print("Your entry is not valid. We will proceed with a default value of $1,000")
     amount = 1000
+
+
+    
 
 # Telling the user that data will be processed now.
 print(" ") #extra space for aesthetics
@@ -44,11 +60,11 @@ print("We will now process your data and recommend a list of securities.")
 
 # Determining proper filters based on the timeframe.
 if timeframe == "1":
-    some_filters = [filters["P/E"]["Low (<15)"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"]] #, filters["50-Day Simple Moving Average"]["Price 20% below SMA50"]
+    some_filters = [filters["P/E"]["Low (<15)"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"]]
     
 elif timeframe == "2":
 
-    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["Analyst Recom."]["Buy or better"]]
+    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"]]
 elif timeframe == "3":
 
     some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["20% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["Sales growthpast 5 years"]["Over 10%"], filters["Debt/Equity"]["Under 0.2"]]
@@ -104,7 +120,6 @@ if proceed == "Yes" or proceed == "yes":
         print("   Company: ", i["Company"], " Ticker:", i["Ticker"])
         print("   Description: ", i["Company"], " is in the ", i["Sector"], "and the ", i["Industry"], " industry.")
         print("                ", i["Company"], " has a market capitaliation of ", i["Market Cap"], "and a Price/Earnings ratio of ", i["P/E"], ".")
-        print("                We recommended ", i["Ticker"], "because ....")
         print(" ")
         include = input("   Would you like to include this company in your portfolio? (Y/N)")
 
@@ -127,13 +142,65 @@ if proceed == "Yes" or proceed == "yes":
 
     print("We have run through all of our recommendations.")
 
+# Depending on how many equities the user chose, process the results
     if len(portfolio) == 0:
+        # If user chose 0 equities, the program is over
         print("Unfortunately, you have chosen 0 of our recommendations. Goodbye.")
     elif len(portfolio) == 1:
+        # If user chose just 1 equity, the program is over because that equity would receive 100% of the weight
         print("You have chosen 1 of our recommendations. Thank you for using our program and best of luck.")
     else:
+        # If user chose multiple equities, the program can now run an additional step to recommend the best way to weight each equity.
         print("You have chosen to include the following securities in your portfolio:")
         print(portfolio)
+
+        # Giving the user the option to add any other securities to their portfolio
+        print("Would you like to add any securities to your portfolio?")
+        add = input("Type yes to add securities, or no to keep the portfolio as is.")
+        if add == "yes" or add == "Yes" or add == "Y" or add == "y":
+            while add != "no" or add != "No":
+                new = input("Please type the ticker of the security that you would like to add to your portfolio:")
+                portfolio.append(new)
+                add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'.")
+                if add == "no" or "No":
+                    break
+
+        #Asks the user if they would like to quit or proceed
+        print(" ")
+        print("Would you like to proceed to the next step, where we will recommend what % weight to put in each equity?")
+        proceed_to_suggested_weights = input("Type yes to proceed, or type anything else to quit.")
+        if proceed_to_suggested_weights == "yes" or proceed_to_suggested_weights == "Yes" or proceed_to_suggested_weights == "y":
+
+            # Run through recommended weights
+            import yfinance as yf
+            import numpy as np
+            import scipy.optimize as sco
+
+            noa = len(portfolio)
+            raw = yf.download(portfolio, start="2015-01-01", end="2018-12-31")
+            price_data=raw['Adj Close']
+            rets = np.log(price_data / price_data.shift(1))
+            
+            mu=rets.mean() * 252
+            VarCov=rets.cov() * 252
+            rf=0.01
+
+            initial_guess = [1./noa for x in range(noa)]
+            cons = ({'type': 'eq', 'fun': lambda weights:  np.sum(weights) - 1})
+            bnds = tuple((0, 1) for x in range(noa))
+            opt_mve = sco.minimize(negative_sharpe, initial_guess, bounds=bnds, constraints=cons)
+            mve_weights=opt_mve['x']
+            print("The optimal weights are:", mve_weights)
+            mve_ret = np.dot(mve_weights, mu)
+            print("Based on past returns, you may expect a return of ", mve_ret)
+            mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))
+            print("Volatility:", mve_vol)
+            
+
+
+        else:
+            print("Thank you for using the program. Goodbye.")
+
 
 
 
