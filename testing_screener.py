@@ -1,4 +1,5 @@
-#Here, I will test the screener to make sure I can apply different filters
+#Here is my program:
+
 
 from finviz.screener import Screener
 
@@ -38,14 +39,14 @@ print("We will now process your data and recommend a list of securities.")
 
 # Determining proper filters based on the timeframe.
 if timeframe == "1":
-    some_filters = [filters["P/E"]["Low (<15)"], filters["Market Cap."]["Mid ($2bln to $10bln)"], filters["Target Price"]["30% Above Price"]]
+    some_filters = [filters["P/E"]["Low (<15)"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"]] #, filters["50-Day Simple Moving Average"]["Price 20% below SMA50"]
     
 elif timeframe == "2":
 
-    some_filters = [filters["P/E"]["Low (<15)"], filters["Market Cap."]["Mid ($2bln to $10bln)"], filters["Target Price"]["30% Above Price"]]
+    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["Analyst Recom."]["Buy or better"]]
 elif timeframe == "3":
 
-    some_filters = [filters["P/E"]["Low (<15)"], filters["Market Cap."]["Mid ($2bln to $10bln)"], filters["Target Price"]["30% Above Price"]]
+    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["20% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["Sales growthpast 5 years"]["Over 10%"], filters["Debt/Equity"]["Under 0.2"]]
 
 else:
     print("Try again.")

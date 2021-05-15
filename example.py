@@ -5,6 +5,7 @@ from finviz.screener import Screener
 # Get dict of available filters
 # filters dict contains the corresponding filter tags
 filters = Screener.load_filter_dict()
+print(filters)
 some_filters = [filters["PEG"]["Under 1"], filters["Exchange"]["AMEX"]]
 stock_list = Screener(filters=some_filters, order="ticker")
 print(stock_list)
