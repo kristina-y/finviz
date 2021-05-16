@@ -17,24 +17,28 @@ finviz-api
 
 Downloading & Installation
 -----
-    Fork this remote repository under your control, and navigate to it in the terminal. and navi
-    Fork this [remote repository](https://github.com/kristina-y/finviz) under your own control, then "clone" or download your remote copy onto your local computer.
+    Fork this remote repository (https://github.com/kristina-y/finviz) under your own control, then "clone" or download your remote copy onto your local computer.
 
     Then navigate there from the command line (subsequent commands assume you are running them from the local repository's root directory):
 
-    
-    $ cd finviz
+    ```sh
+    cd finviz
+    ```
 
     Next, install the required packages:
 
+    ```sh
     $ pip install -r requirements.txt
+    ```
 
 
 Usage
 
     Run the program using the following command:
 
+    ```sh
     $ python robo_advisor.py
+    ```
 
 What is Finviz?
 =====
