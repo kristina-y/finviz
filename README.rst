@@ -21,24 +21,24 @@ Downloading & Installation
 
     Then navigate there from the command line (subsequent commands assume you are running them from the local repository's root directory):
 
-    ``
+    ```
     cd finviz
-    ``
+    ```
 
     Next, install the required packages:
 
-    ``
+    ```
     pip install -r requirements.txt
-    ``
+    ```
 
 
 Usage
 
     Run the program using the following command:
 
-    ``
-    $ python robo_advisor.py
-    ``
+    ```
+    python robo_advisor.py
+    ```
 
 What is Finviz?
 =====
