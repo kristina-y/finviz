@@ -20,14 +20,20 @@ print("Welcome to the program! Today, we will help you make an investment plan."
 print("First, what is your investment timeframe? Your three choices are as follows:")
 print("    1. I plan to hold my investments for under 3 months")
 print("    2. I plan to hold my investments for 3-12 months.")
-print("    3. I plan to hold my investments for over 1  year.")
+print("    3. I plan to hold my investments for over 1 year.")
 
 # Determining investment timeframe (which will cause the algorithm to vary)
 timeframe = input("Please enter 1, 2, or 3 depending on how many months you intend to hold: ")
 
 # Data validation for timeframe
-if timeframe == "1" or timeframe == "2" or timeframe == "3":
-    print("Thank you. You have indicated that you plan to invest for ", timeframe, "months.")
+if timeframe == "1":
+    print("Thank you. You have indicated that you plan to invest for 1-3 months.")
+    print(" ")
+elif timeframe == "2":
+    print("Thank you. You have indicated that you plan to invest for 3-6 months.")
+    print(" ")
+elif timeframe == "3":
+    print("Thank you. You have indicated that you plan to invest for 12+ months.")
     print(" ")
 else:
     print("That is not a valid input. We will proceed with a default value of under 3 months.")
@@ -42,7 +48,7 @@ try:
     float(amount)
     
     if float(amount) > 0:
-        print("You have entered that you wish to invest $", amount, ".")
+        print("You have entered that you wish to invest $", amount)
         amount = float(amount)
     else:
         print("You have entered a negative or 0 value. Using a default value of $1,000 instead.")
@@ -100,12 +106,16 @@ proceed = input("Please type 'Yes' if you wish to proceed. Type anything else if
 
 # User chose to proceed
 if proceed == "Yes" or proceed == "yes":
+    print(" ")
     print("We will now run through each of the recommended stocks, and you may indicate if you would like to include it in your portfolio or not.")
     
     #Giving the user a recommendation for how many equities to invest in, if the amount is less than 1000.
     if (amount < 1000):
         print(" ")
-        print("Based on the amount of money that you are willing to invest, we would recommend selecting 5 of the ", counter, "recommended stocks.")
+        print("Based on the amount of money that you are willing to invest, we would recommend selecting no more than 5 securities to invest in.")
+
+    #variable to store the number of recommendations
+    number_of_recs = counter
 
     #re-setting counter to 0
     counter = 1
@@ -116,12 +126,12 @@ if proceed == "Yes" or proceed == "yes":
     #proceed with the program
     for i in stock_data:
         # Print detailed info on each equity
-        print("Recommendation #", counter, ":")
+        print("Recommendation #", counter, "of", number_of_recs, ":")
         print("   Company: ", i["Company"], " Ticker:", i["Ticker"])
         print("   Description: ", i["Company"], " is in the ", i["Sector"], "and the ", i["Industry"], " industry.")
         print("                ", i["Company"], " has a market capitaliation of ", i["Market Cap"], "and a Price/Earnings ratio of ", i["P/E"], ".")
         print(" ")
-        include = input("   Would you like to include this company in your portfolio? (Y/N)")
+        include = input("   Would you like to include this company in your portfolio? (Y/N)  ")
 
         # User input determines whether this company is included in the portfolio
         if include == "Y" or include == "y" or include == "yes":
@@ -141,27 +151,41 @@ if proceed == "Yes" or proceed == "yes":
         counter = counter + 1
 
     print("We have run through all of our recommendations.")
+    print(" ")
 
 # Depending on how many equities the user chose, process the results
     if len(portfolio) == 0:
-        # If user chose 0 equities, the program is over
-        print("Unfortunately, you have chosen 0 of our recommendations. Goodbye.")
+        # If user chose 0 equities, the program lets them quit or add their own securities
+        print("Unfortunately, you have chosen 0 of our recommendations. Would you like to fill your portfolio with your own ideas?")
+        next_step = input("Type 'yes' if you would like to add your own securities or 'quit' if you would like to exit the program. ")
+        print(" ")
+
     elif len(portfolio) == 1:
-        # If user chose just 1 equity, the program is over because that equity would receive 100% of the weight
-        print("You have chosen 1 of our recommendations. Thank you for using our program and best of luck.")
+        # If user chose just 1 equity, the program lets them quit or add their own securities
+        print("You have chosen 1 of our recommendations. Would you like to fill your portfolio with your own ideas?")
+        next_step = input("Type 'yes' if you would like to add your own securities or 'quit' if you would like to exit the program. ")
+        print(" ")
+
     else:
+        #automatically go onto the next step
+        next_step = "yes"
+
+    if next_step == "yes" or next_Step == "Yes" or next_step == "Y" or next_step == "y":
         # If user chose multiple equities, the program can now run an additional step to recommend the best way to weight each equity.
         print("You have chosen to include the following securities in your portfolio:")
         print(portfolio)
+        print(" ")
 
         # Giving the user the option to add any other securities to their portfolio
         print("Would you like to add any securities to your portfolio?")
-        add = input("Type yes to add securities, or no to keep the portfolio as is.")
+        add = input("Type yes to add securities, or no to keep the portfolio as is. ")
         if add == "yes" or add == "Yes" or add == "Y" or add == "y":
             while add != "no" or add != "No":
-                new = input("Please type the ticker of the security that you would like to add to your portfolio:")
+                new = input("Please type the ticker of the security that you would like to add to your portfolio: ")
                 portfolio.append(new)
-                add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'.")
+                print("... Successfully added", new, "to the portfolio.")
+                print(" ")
+                add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'. ")
                 if add == "no" or "No":
                     break
 
@@ -172,7 +196,7 @@ if proceed == "Yes" or proceed == "yes":
         if proceed_to_suggested_weights == "yes" or proceed_to_suggested_weights == "Yes" or proceed_to_suggested_weights == "y":
 
             # Run through recommended weights
-            # Much of the code in this section is adapted from my Principles of Investment Class (FINC 241)
+            # Some of the code in this section is adapted from my Principles of Investment Class (FINC 241)
             
             import yfinance as yf # Using yahoo finance historical returns
             import numpy as np
@@ -183,15 +207,15 @@ if proceed == "Yes" or proceed == "yes":
             if timeframe == "1":
                 # for the shortest timeframe, we are using the first 3 months of 2021
                 raw = yf.download(portfolio, start="2021-01-01", end="2021-03-01")
-                print("!!!!!!!!!!!!!!!!!!!!!First timeframe successful")
+                
             elif timeframe == "2":
                 # for the second to shortest timeframe, we are using the most recent 6 months
                 raw = yf.download(portfolio, start="2020-12-01", end="2021-05-01")
-                print("!!!!!!!!!!!!!!!!!!!!!Second timeframe successful")
+                
             else:
                 # for the longest timeframe, we are using data from before covid
                 raw = yf.download(portfolio, start="2019-01-01", end="2020-01-01")
-                print("!!!!!!!!!!!!!!!!!!!!!Third timeframe successful")
+                
             
             price_data=raw['Adj Close']
             price_data.sort_index()
@@ -201,32 +225,50 @@ if proceed == "Yes" or proceed == "yes":
             VarCov=rets.cov() * 252
             rf=0.01
 
+            # Constructing MVE portfolio
             initial_guess = [1./noa for x in range(noa)]
             cons = ({'type': 'eq', 'fun': lambda weights:  np.sum(weights) - 1})
             bnds = tuple((0, 1) for x in range(noa))
             opt_mve = sco.minimize(negative_sharpe, initial_guess, bounds=bnds, constraints=cons)
             mve_weights=opt_mve['x']
-            print("The optimal weights are:", mve_weights)
-            mve_ret = np.dot(mve_weights, mu)
-            print("Based on past returns, you may expect a return of ", mve_ret)
-            mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))
-            print("Volatility:", mve_vol)
+
             
 
             # Need to print output with weights
             portfolio.sort()
 
             i = 0
-
+            print("The optimal weights are:")
+            print("Ticker     Weight")
             while i < noa:
-                print("Ticker     Weight")
+                
                 if mve_weights[i] < 0.0001:
                     print(portfolio[i], "       0%")
                 else:
                     print(portfolio[i], "       ", "{:.2%}".format(mve_weights[i]))
 
                 i = i + 1
+            
+            # Will also give return and volatility
+            mve_ret = np.dot(mve_weights, mu)
+            
+            mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))
+            
+            print(" ")
+            print("Based on past returns, you may expect a return of ", mve_ret, "and a volatility of ", mve_vol)
+            print(" ")
+
+            print("If you choose to use our recommended weights, then you should invest the following $ in each security:")
+            i = 0
+            
+            while i < noa:
                 
+                if mve_weights[i] < 0.0001:
+                    print(portfolio[i], ": --")
+                else:
+                    print(portfolio[i], ": $", mve_weights[i] * amount)
+
+                i = i + 1
 
 
                 
@@ -236,27 +278,11 @@ if proceed == "Yes" or proceed == "yes":
         else:
             print("Thank you for using the program. Goodbye.")
 
-
+    else:
+        print("Thank you for using the program. Goodbye.")
 
 
 
 
 else:
     print("Thank you for using the program. Goodbye.")
-
-
-#####
-# Use raw filter tags in a list
-# filters = ['geo_usa']
-#filters = ["idx_sp500"]  # Shows companies in the S&P500
-#print("Screening stocks...")
-#stock_list = Screener(filters=filters, order="ticker")
-#print(stock_list)
-
-
-
-# Export the screener results to CSV file
-
-
-# Create a SQLite database
-# stock_list.to_sqlite("sp500.sqlite")
