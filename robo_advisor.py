@@ -1,7 +1,7 @@
 #Here is my program:
 
 # Defining a function.
-# This will be necessary later on for determining weights
+# This will be necessary later on when suggesting weights
 def negative_sharpe(weights):
     weights = np.array(weights)
     pret = np.dot(weights, mu)
@@ -66,14 +66,14 @@ print("We will now process your data and recommend a list of securities.")
 
 # Determining proper filters based on the timeframe.
 if timeframe == "1":
-    some_filters = [filters["P/E"]["Low (<15)"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"], filters["IPO date"]["More than a year ago"]]
+    some_filters = [filters["P/E"]["Low (<15)"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"], filters["IPO Date"]["More than a year ago"]]
     
 elif timeframe == "2":
 
-    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"], filters["IPO date"]["More than a year ago"]]
+    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"], filters["IPO Date"]["More than a year ago"]]
 elif timeframe == "3":
 
-    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["20% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["Sales growthpast 5 years"]["Over 10%"], filters["Debt/Equity"]["Under 0.2"], filters["IPO date"]["More than 5 years ago"]]
+    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["20% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["Sales growthpast 5 years"]["Over 10%"], filters["Debt/Equity"]["Under 0.2"], filters["IPO Date"]["More than 5 years ago"]]
 
 else:
     print("Try again.")
@@ -255,7 +255,7 @@ if proceed == "Yes" or proceed == "yes":
             mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))
             
             print(" ")
-            print("Based on past returns, you may expect a return of ", mve_ret, "and a volatility of ", mve_vol)
+            print("Based on past returns, you may expect a return of anywhere up to ", "{:.2%}".format(mve_ret), "and a volatility of ", "{:.2%}".format(mve_vol))
             print(" ")
 
             print("If you choose to use our recommended weights, then you should invest the following $ in each security:")
