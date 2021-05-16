@@ -172,13 +172,29 @@ if proceed == "Yes" or proceed == "yes":
         if proceed_to_suggested_weights == "yes" or proceed_to_suggested_weights == "Yes" or proceed_to_suggested_weights == "y":
 
             # Run through recommended weights
-            import yfinance as yf
+            # Much of the code in this section is adapted from my Principles of Investment Class (FINC 241)
+            
+            import yfinance as yf # Using yahoo finance historical returns
             import numpy as np
             import scipy.optimize as sco
 
             noa = len(portfolio)
-            raw = yf.download(portfolio, start="2015-01-01", end="2018-12-31")
+
+            if timeframe == "1":
+                # for the shortest timeframe, we are using the first 3 months of 2021
+                raw = yf.download(portfolio, start="2021-01-01", end="2021-03-01")
+                print("!!!!!!!!!!!!!!!!!!!!!First timeframe successful")
+            elif timeframe == "2":
+                # for the second to shortest timeframe, we are using the most recent 6 months
+                raw = yf.download(portfolio, start="2020-12-01", end="2021-05-01")
+                print("!!!!!!!!!!!!!!!!!!!!!Second timeframe successful")
+            else:
+                # for the longest timeframe, we are using data from before covid
+                raw = yf.download(portfolio, start="2019-01-01", end="2020-01-01")
+                print("!!!!!!!!!!!!!!!!!!!!!Third timeframe successful")
+            
             price_data=raw['Adj Close']
+            price_data.sort_index()
             rets = np.log(price_data / price_data.shift(1))
             
             mu=rets.mean() * 252
@@ -195,6 +211,25 @@ if proceed == "Yes" or proceed == "yes":
             print("Based on past returns, you may expect a return of ", mve_ret)
             mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))
             print("Volatility:", mve_vol)
+            
+
+            # Need to print output with weights
+            portfolio.sort()
+
+            i = 0
+
+            while i < noa:
+                print("Ticker     Weight")
+                if mve_weights[i] < 0.0001:
+                    print(portfolio[i], "       0%")
+                else:
+                    print(portfolio[i], "       ", "{:.2%}".format(mve_weights[i]))
+
+                i = i + 1
+                
+
+
+                
             
 
 
