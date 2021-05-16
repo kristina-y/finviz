@@ -66,14 +66,14 @@ print("We will now process your data and recommend a list of securities.")
 
 # Determining proper filters based on the timeframe.
 if timeframe == "1":
-    some_filters = [filters["P/E"]["Low (<15)"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"]]
+    some_filters = [filters["P/E"]["Low (<15)"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"], filters["IPO date"]["More than a year ago"]]
     
 elif timeframe == "2":
 
-    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"]]
+    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["10% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["50-Day Simple Moving Average"]["Price 20 below SMA50"], filters["IPO date"]["More than a year ago"]]
 elif timeframe == "3":
 
-    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["20% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["Sales growthpast 5 years"]["Over 10%"], filters["Debt/Equity"]["Under 0.2"]]
+    some_filters = [filters["P/E"]["Under 20"], filters["Country"]["USA"], filters["Target Price"]["20% Above Price"], filters["Analyst Recom."]["Buy or better"], filters["Sales growthpast 5 years"]["Over 10%"], filters["Debt/Equity"]["Under 0.2"], filters["IPO date"]["More than 5 years ago"]]
 
 else:
     print("Try again.")
