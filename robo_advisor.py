@@ -15,7 +15,7 @@ from finviz.screener import Screener
 filters = Screener.load_filter_dict()
 
 # Welcome message:
-print("Welcome to the program! Today, we will help you make an investment plan.")
+print("Welcome to the short term robo advisor! Today, we will help you make an investment plan.")
 
 print("First, what is your investment timeframe? Your three choices are as follows:")
 print("    1. I plan to hold my investments for under 3 months")
@@ -242,10 +242,22 @@ if proceed == "Yes" or proceed == "yes":
             print("Ticker     Weight")
             while i < noa:
                 
+                
+
+
                 if mve_weights[i] < 0.0001:
-                    print(portfolio[i], "       0%")
+                # if the result is really small (negligible) print 0 instead of that negligible amount
+                    if len(portfolio[i]) == 3:
+                        # printing an extra space if ticker is 3 characters
+                        print(portfolio[i], "       0%")
+                    else:
+                        print(portfolio[i], "      0%")
                 else:
-                    print(portfolio[i], "       ", "{:.2%}".format(mve_weights[i]))
+                    if len(portfolio[i]) == 3:
+                        #printing an extra space if ticker is 3 characters
+                        print(portfolio[i], "      ", "{:.2%}".format(mve_weights[i]))
+                    else:
+                        print(portfolio[i], "     ", "{:.2%}".format(mve_weights[i]))
 
                 i = i + 1
             
@@ -264,14 +276,21 @@ if proceed == "Yes" or proceed == "yes":
             while i < noa:
                 
                 if mve_weights[i] < 0.0001:
-                    print(portfolio[i], ": --")
+                    if len(portfolio[i]) == 3:
+                        print(portfolio[i], " :  --")
+                    else:
+                        print(portfolio[i], ":  --")
                 else:
-                    print(portfolio[i], ": $", mve_weights[i] * amount)
+                    if len(portfolio[i]) == 3:
+                        print(portfolio[i], " : ", "${:,.2f}".format(mve_weights[i] * amount))
+                    else:   
+                        print(portfolio[i], ": ", "${:,.2f}".format(mve_weights[i] * amount))
 
                 i = i + 1
 
 
-                
+            print(" ")
+            print("Thank you for using the short term robo advisor. Best of luck!")
             
 
 
