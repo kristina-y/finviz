@@ -1,6 +1,6 @@
-finviz-api
+Short Term Investments Robo Advisor
 ########
-*Unofficial Python API for FinViz*
+*Kristina Yarovinsky*
 
 .. image:: https://badge.fury.io/py/finviz.svg
     :target: https://badge.fury.io/py/finviz
