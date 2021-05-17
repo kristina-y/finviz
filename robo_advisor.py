@@ -16,6 +16,7 @@ def is_yes(user_input):
     else:
         return False
 
+# Validating the $ amount entered by user
 def validate_amount(how_much_to_invest):
     try:
         float(how_much_to_invest)
@@ -30,6 +31,7 @@ def validate_amount(how_much_to_invest):
         print("Your entry is not valid. We will proceed with a default value of $1,000")
         return(1000)
 
+# Validating and confirming the timeframe selected by the user
 def validate_timeframe(user_choice):
     if user_choice == "1":
         print("Thank you. You have indicated that you plan to invest for 1-3 months.\n")
@@ -44,10 +46,46 @@ def validate_timeframe(user_choice):
         print("That is not a valid input. We will proceed with a default value of under 3 months.\n")
         return "1"
 
+# This function gives the user a recommendation of how many equities to invest in, based on the amount
+def number_of_stocks(amount_to_invest):
+    if (amount_to_invest < 500):
+        print("\nBased on the amount of money that you are willing to invest, we would recommend selecting no more than 5 securities to invest in.")
+    elif (amount_to_invest < 1000):
+        print("\nBased on the amount of money that you are willing to invest, we would recommend selecting no more than 10 securities to invest in.")
+    else:
+        print("\nWe encourage you to diversify your portfolio as much as you can by selecting securities outside of our recommended list.")
+
+# This function takes in a list of recommended stocks and runs through each option, giving the user a choice to include it or not.
+def narrow_down_recommendations(list_of_options):
+    counter = 1
+    result = []
+    for i in list_of_options:
+        # Print detailed info on each equity
+        print("Recommendation #", counter, "of", len(list_of_options), ":")
+        print("   Company: ", i["Company"], " Ticker:", i["Ticker"])
+        print("   Description: ", i["Company"], " is in the ", i["Sector"], "and the ", i["Industry"], " industry.")
+        print("                ", i["Company"], " has a market cap of ", i["Market Cap"], "and a Price/Earnings ratio of ", i["P/E"], ".\n")
+        include = input("   Would you like to include this company in your portfolio? (Y/N)  ")
+
+        # User input determines whether this company is included in the portfolio
+        if is_yes(include) == True:
+            #include it
+            result.append(i["Ticker"])
+            print("You have successfully included ", i["Ticker"], "in your portfolio.\n")
+        elif include == "N" or include == "n" or include == "no":
+            #do not include it
+            print("We have excluded this company from your portfolio.\n")
+        else:
+            print("Your input was invalid so we have excluded this company from your portfolio.\n")
+            
+
+        # Increasing counter by 1
+        counter = counter + 1
+    return result
+
 from finviz.screener import Screener
 
-# Get dict of available filters
-# filters dict contains the corresponding filter tags
+# Get dictionary of available filters
 filters = Screener.load_filter_dict()
 
 # Welcome message:
@@ -73,8 +111,7 @@ if __name__ == "__main__":
     amount = validate_amount(amount)
 
     # Telling the user that data will be processed now.
-    print(" ") #extra space for aesthetics
-    print("We will now process your data and recommend a list of securities.")
+    print("\nWe will now process your data and recommend a list of securities.")
 
     # Determining proper filters based on the timeframe.
     if timeframe == "1":
@@ -94,86 +131,38 @@ if __name__ == "__main__":
     stock_list = Screener(filters=some_filters, order="ticker")
 
     # Creating a csv with the stock recommendations
-    print(" ")
-    print("Downloading csv file with the stock recommendations...")
-    print(" ")
+    print("\nDownloading csv file with the stock recommendations...\n")
     stock_list.to_csv("recommended_stocks.csv")
 
     # Stock_data is a list that will hold the recommendations.
     print("Retrieving stock data...")
     stock_data = stock_list.get_ticker_details()
 
-    #counter variable to determine how many options there are
-    counter = 0
-
     # Printing out the tickers of the recommended equities.
-    print(" ")
-    print("We have processed the data and recommend the following securities:")
+    print("\nWe have processed the data and recommend the following securities:")
     for i in stock_data:
         print(i["Ticker"])
-        counter = counter + 1
 
-    print(" ")
-
-
-    print("We will now run through each of the recommended stocks, and you may indicate if you would like to include it in your portfolio or not.")
-        
-    #Giving the user a recommendation for how many equities to invest in, if the amount is less than 1000.
-    if (amount < 1000):
-        print(" ")
-        print("Based on the amount of money that you are willing to invest, we would recommend selecting no more than 5 securities to invest in.")
-
-    #variable to store the number of recommendations
-    number_of_recs = counter
-
-    #re-setting counter to 0
-    counter = 1
+    number_of_stocks(amount)
+    
+    print("\nWe will now run through each of the recommended stocks, and you may indicate if you would like to include it in your portfolio or not.")
 
     #new list to hold only the equities that the user picked
-    portfolio = []
+    portfolio = narrow_down_recommendations(stock_data)
 
     #proceed with the program
-    for i in stock_data:
-        # Print detailed info on each equity
-        print("Recommendation #", counter, "of", number_of_recs, ":")
-        print("   Company: ", i["Company"], " Ticker:", i["Ticker"])
-        print("   Description: ", i["Company"], " is in the ", i["Sector"], "and the ", i["Industry"], " industry.")
-        print("                ", i["Company"], " has a market capitaliation of ", i["Market Cap"], "and a Price/Earnings ratio of ", i["P/E"], ".")
-        print(" ")
-        include = input("   Would you like to include this company in your portfolio? (Y/N)  ")
-
-        # User input determines whether this company is included in the portfolio
-        if is_yes(include) == True:
-            #include it
-            portfolio.append(i["Ticker"])
-            print("You have successfully included ", i["Ticker"], "in your portfolio.")
-        elif include == "N" or include == "n" or include == "no":
-            #do not include it
-            print("We have excluded this company from your portfolio.")
-        else:
-            print("Your input was invalid so we have excluded this company from your portfolio.")
-            
-        #Print extra space
-        print(" ")
-
-        # Increasing counter by 1
-        counter = counter + 1
-
-    print("We have run through all of our recommendations.")
-    print(" ")
+    print("We have run through all of our recommendations.\n")
 
     # Depending on how many equities the user chose, process the results
     if len(portfolio) == 0:
         # If user chose 0 equities, the program lets them quit or add their own securities
         print("Unfortunately, you have chosen 0 of our recommendations. Would you like to fill your portfolio with your own ideas?")
         next_step = input("Type 'yes' if you would like to add your own securities or 'quit' if you would like to exit the program. ")
-        print(" ")
 
     elif len(portfolio) == 1:
         # If user chose just 1 equity, the program lets them quit or add their own securities
         print("You have chosen 1 of our recommendations. Would you like to fill your portfolio with your own ideas?")
         next_step = input("Type 'yes' if you would like to add your own securities or 'quit' if you would like to exit the program. ")
-        print(" ")
 
     else:
         #automatically go onto the next step
@@ -181,25 +170,23 @@ if __name__ == "__main__":
 
     if is_yes(next_step) == True:
         # If user chose multiple equities, the program can now run an additional step to recommend the best way to weight each equity.
-        print("You have chosen to include the following securities in your portfolio:")
+        print("\nYou have chosen to include the following securities in your portfolio:")
         print(portfolio)
-        print(" ")
+
 
         # Giving the user the option to add any other securities to their portfolio
-        print("Would you like to add any securities to your portfolio?")
+        print("\nWould you like to add any securities to your portfolio?")
         add = input("Type yes to add securities, or no to keep the portfolio as is. ")
         while is_yes(add) == True:
             new = input("Please type the ticker of the security that you would like to add to your portfolio: ")
             portfolio.append(new)
-            print("... Successfully added", new, "to the portfolio.")
-            print(" ")
+            print("... Successfully added", new, "to the portfolio.\n")
             add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'. ")
                     
 
         #Asks the user if they would like to quit or proceed
-        print(" ")
-        print("Would you like to proceed to the next step, where we will recommend what % weight to put in each equity?")
-        proceed_to_suggested_weights = input("Type yes to proceed, or type anything else to quit.")
+        print("\nWould you like to proceed to the next step, where we will recommend what % weight to put in each equity?")
+        proceed_to_suggested_weights = input("Type yes to proceed, or type anything else to quit. ")
         if is_yes(proceed_to_suggested_weights) == True:
 
             # Run through recommended weights
@@ -262,9 +249,7 @@ if __name__ == "__main__":
                 
             mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))
                 
-            print(" ")
-            print("Based on past returns, you may expect a return of anywhere up to ", "{:.2%}".format(mve_ret), "and a volatility of ", "{:.2%}".format(mve_vol))
-            print(" ")
+            print("\nBased on past returns, you may expect a return of anywhere up to ", "{:.2%}".format(mve_ret), "and a volatility of ", "{:.2%}".format(mve_vol), "\n")
 
             print("If you choose to use our recommended weights, then you should invest the following $ in each security:")
             i = 0
@@ -279,13 +264,12 @@ if __name__ == "__main__":
                 i = i + 1
 
 
-            print(" ")
-            print("Thank you for using the short term robo advisor. Best of luck!")
+            print("\nThank you for using the short term robo advisor. Best of luck!")
                 
 
 
         else:
-            print("Thank you for using the program. Goodbye.")
+            print("\nThank you for using the program. Goodbye.")
 
     else:
-        print("Thank you for using the program. Goodbye.")
+        print("\nThank you for using the program. Goodbye.")
