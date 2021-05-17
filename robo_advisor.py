@@ -83,28 +83,25 @@ def narrow_down_recommendations(list_of_options):
         counter = counter + 1
     return result
 
-def print_output_as_table(list_of_stocks, weights, version, total):
+def print_output_as_table(list_of_stocks, weights):
     # list of stocks is the user's chosen portfolio
     # weights are the mve weights that will be printed
-    # if version = 1, then print just weights. if version = 2 then print $ amount
-    if version == 1:
-        print("The optimal weights are:")
-        print("Ticker     Weight")
-        for i in list_of_stocks:
-            if len(list_of_stocks[i]) == 3:
-                #printing an extra space if ticker is 3 characters
-                print(list_of_stocks[i], "      ", "{:.2%}".format(weights[i]))
-            else:
-                print(list_of_stocks[i], "     ", "{:.2%}".format(weights[i]))
-        #
-    else:
-        # printing $ amounts
-        for i in list_of_stocks:
+    print("The optimal weights are:")
+    print("Ticker     Weight")
+    for i in list_of_stocks:
+        if len(list_of_stocks[i]) == 3:
+            #printing an extra space if ticker is 3 characters
+            print(list_of_stocks[i], "      ", "{:.2%}".format(weights[i]))
+        else:
+            print(list_of_stocks[i], "     ", "{:.2%}".format(weights[i]))
+
+def print_output_as_dollar(list_of_stocks, weights, total):
+    for i in list_of_stocks:
                     
-            if len(list_of_stocks[i]) == 3:
-                print(list_of_stocks[i], " : ", "${:,.2f}".format(weights[i] * total))
-            else:   
-                print(list_of_stocks[i], ": ", "${:,.2f}".format(weights[i] * total))
+        if len(list_of_stocks[i]) == 3:
+            print(list_of_stocks[i], " : ", "${:,.2f}".format(weights[i] * total))
+        else:   
+            print(list_of_stocks[i], ": ", "${:,.2f}".format(weights[i] * total))
 
 
 from finviz.screener import Screener
@@ -253,7 +250,7 @@ if __name__ == "__main__":
             portfolio.sort()
 
             # Printing output with weights
-            print_output_as_table(portfolio, mve_weights, 1, amount)
+            print_output_as_table(portfolio, mve_weights)
                 
             # Will also give return and volatility
             mve_ret = np.dot(mve_weights, mu)  
@@ -263,7 +260,7 @@ if __name__ == "__main__":
 
             print("If you choose to use our recommended weights, then you should invest the following $ in each security:")
                 
-            print_output_as_table(portfolio, mve_weights, 2, amount)
+            print_output_as_dollar(portfolio, mve_weights, amount)
 
 
             print("\nThank you for using the short term robo advisor. Best of luck!")
