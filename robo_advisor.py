@@ -8,6 +8,13 @@ def negative_sharpe(weights):
     pvol = np.sqrt(np.dot(weights,np.dot(VarCov, weights.T)))
     return -(pret-rf)/pvol
 
+# Since my program collects a lot of user inputs, this function checks whether the user has said 'yes' or 'no'
+def is_yes(user_input):
+    if user_input == "yes" or user_input == "Yes" or user_input == "Y" or user_input == "y":
+        return True
+    else:
+        return False
+
 from finviz.screener import Screener
 
 # Get dict of available filters
@@ -105,7 +112,7 @@ print(" ")
 proceed = input("Please type 'Yes' if you wish to proceed. Type anything else if you would like to quit. ")
 
 # User chose to proceed
-if proceed == "Yes" or proceed == "yes":
+if is_yes(proceed) == True:
     print(" ")
     print("We will now run through each of the recommended stocks, and you may indicate if you would like to include it in your portfolio or not.")
     
@@ -134,7 +141,7 @@ if proceed == "Yes" or proceed == "yes":
         include = input("   Would you like to include this company in your portfolio? (Y/N)  ")
 
         # User input determines whether this company is included in the portfolio
-        if include == "Y" or include == "y" or include == "yes":
+        if is_yes(include) == True:
             #include it
             portfolio.append(i["Ticker"])
             print("You have successfully included ", i["Ticker"], "in your portfolio.")
@@ -170,7 +177,7 @@ if proceed == "Yes" or proceed == "yes":
         #automatically go onto the next step
         next_step = "yes"
 
-    if next_step == "yes" or next_Step == "Yes" or next_step == "Y" or next_step == "y":
+    if is_yes(next_step) == True:
         # If user chose multiple equities, the program can now run an additional step to recommend the best way to weight each equity.
         print("You have chosen to include the following securities in your portfolio:")
         print(portfolio)
@@ -179,20 +186,19 @@ if proceed == "Yes" or proceed == "yes":
         # Giving the user the option to add any other securities to their portfolio
         print("Would you like to add any securities to your portfolio?")
         add = input("Type yes to add securities, or no to keep the portfolio as is. ")
-        if add == "yes" or add == "Yes" or add == "Y" or add == "y":
-            while add == "yes" or add == "Yes":
-                new = input("Please type the ticker of the security that you would like to add to your portfolio: ")
-                portfolio.append(new)
-                print("... Successfully added", new, "to the portfolio.")
-                print(" ")
-                add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'. ")
+        while is_yes(add) == True:
+            new = input("Please type the ticker of the security that you would like to add to your portfolio: ")
+            portfolio.append(new)
+            print("... Successfully added", new, "to the portfolio.")
+            print(" ")
+            add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'. ")
                 
 
         #Asks the user if they would like to quit or proceed
         print(" ")
         print("Would you like to proceed to the next step, where we will recommend what % weight to put in each equity?")
         proceed_to_suggested_weights = input("Type yes to proceed, or type anything else to quit.")
-        if proceed_to_suggested_weights == "yes" or proceed_to_suggested_weights == "Yes" or proceed_to_suggested_weights == "y":
+        if is_yes(proceed_to_suggested_weights) == True:
 
             # Run through recommended weights
             # Some of the code in this section is adapted from my Principles of Investment Class (FINC 241)
