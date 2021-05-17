@@ -186,9 +186,7 @@ if proceed == "Yes" or proceed == "yes":
                 print("... Successfully added", new, "to the portfolio.")
                 print(" ")
                 add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'. ")
-                if add == "no" or add == "No":
-                    
-                    break
+                
 
         #Asks the user if they would like to quit or proceed
         print(" ")
@@ -243,22 +241,11 @@ if proceed == "Yes" or proceed == "yes":
             print("Ticker     Weight")
             while i < noa:
                 
-                
-
-
-                if mve_weights[i] < 0.0001:
-                # if the result is really small (negligible) print 0 instead of that negligible amount
-                    if len(portfolio[i]) == 3:
-                        # printing an extra space if ticker is 3 characters
-                        print(portfolio[i], "       0%")
-                    else:
-                        print(portfolio[i], "      0%")
+                if len(portfolio[i]) == 3:
+                    #printing an extra space if ticker is 3 characters
+                    print(portfolio[i], "      ", "{:.2%}".format(mve_weights[i]))
                 else:
-                    if len(portfolio[i]) == 3:
-                        #printing an extra space if ticker is 3 characters
-                        print(portfolio[i], "      ", "{:.2%}".format(mve_weights[i]))
-                    else:
-                        print(portfolio[i], "     ", "{:.2%}".format(mve_weights[i]))
+                    print(portfolio[i], "     ", "{:.2%}".format(mve_weights[i]))
 
                 i = i + 1
             
@@ -276,16 +263,10 @@ if proceed == "Yes" or proceed == "yes":
             
             while i < noa:
                 
-                if mve_weights[i] < 0.0001:
-                    if len(portfolio[i]) == 3:
-                        print(portfolio[i], " :  --")
-                    else:
-                        print(portfolio[i], ":  --")
-                else:
-                    if len(portfolio[i]) == 3:
-                        print(portfolio[i], " : ", "${:,.2f}".format(mve_weights[i] * amount))
-                    else:   
-                        print(portfolio[i], ": ", "${:,.2f}".format(mve_weights[i] * amount))
+                if len(portfolio[i]) == 3:
+                    print(portfolio[i], " : ", "${:,.2f}".format(mve_weights[i] * amount))
+                else:   
+                    print(portfolio[i], ": ", "${:,.2f}".format(mve_weights[i] * amount))
 
                 i = i + 1
 
