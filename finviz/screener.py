@@ -25,7 +25,6 @@ TABLE_TYPES = {
     "Technical": "171",
 }
 
-
 class Screener(object):
     """ Used to download data from http://www.finviz.com/screener.ashx. """
 
@@ -33,11 +32,6 @@ class Screener(object):
     def init_from_url(cls, url, rows=None):
         """
         Initializes from url
-
-        :param url: screener url
-        :type url: string
-        :param rows: total number of rows to get
-        :type rows: int
         """
 
         split_query = urlparse_qs(urlparse(url).query)
@@ -73,23 +67,6 @@ class Screener(object):
     ):
         """
         Initializes all variables to its values
-
-        :param tickers: collection of ticker strings eg.: ['AAPL', 'AMD', 'WMT']
-        :type tickers: list
-        :param filters: collection of filters strings eg.: ['exch_nasd', 'idx_sp500', 'fa_div_none']
-        :type filters: list
-        :param rows: total number of rows to get
-        :type rows: int
-        :param order: table order eg.: '-price' (to sort table by descending price)
-        :type order: str
-        :param signal: show by signal eg.: 'n_majornews' (for stocks with major news)
-        :type signal: str
-        :param table: table type eg.: 'Performance'
-        :type table: str
-        :param custom: collection of custom columns eg.: ['1', '21', '23', '45']
-        :type custom: list
-        :var self.data: list of dictionaries containing row data
-        :type self.data: list
         """
 
         if tickers is None:
@@ -139,12 +116,6 @@ class Screener(object):
     ):
         """
         Adds more filters to the screener. Example usage:
-
-        stock_list = Screener(filters=['cap_large'])  # All the stocks with large market cap
-        # After analyzing you decide you want to see which of the stocks have high dividend yield
-        # and show their performance:
-        stock_list(filters=['fa_div_high'], table='Performance')
-        # Shows performance of stocks with large market cap and high dividend yield
         """
 
         if tickers:
@@ -305,15 +276,6 @@ class Screener(object):
 
         return filter_dict
 
-    def to_sqlite(self, filename):
-        """Exports the generated table into a SQLite database.
-
-        :param filename: SQLite database file path
-        :type filename: str
-        """
-
-        export_to_db(self.headers, self.data, filename)
-
     def to_csv(self, filename: str):
         """Exports the generated table into a CSV file.
         Returns a CSV string if filename is None.
@@ -345,15 +307,6 @@ class Screener(object):
     def get_charts(self, period="d", size="l", chart_type="c", ta="1"):
         """
         Downloads the charts of all tickers shown by the table.
-
-        :param period: table period eg. : 'd', 'w' or 'm' for daily, weekly and monthly periods
-        :type period: str
-        :param size: table size eg.: 'l' for large or 's' for small - choose large for better quality but higher size
-        :type size: str
-        :param chart_type: chart type: 'c' for candles or 'l' for lines
-        :type chart_type: str
-        :param ta: technical analysis eg.: '1' to show ta '0' to hide ta
-        :type ta: str
         """
 
         encoded_payload = urlencode(
@@ -398,7 +351,6 @@ class Screener(object):
     def __check_rows(self):
         """
         Checks if the user input for row number is correct.
-        Otherwise, modifies the number or raises NoResults error.
         """
 
         self._total_rows = scrape.get_total_rows(self._page_content)
