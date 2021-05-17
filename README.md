@@ -33,7 +33,3 @@ Run the program using the following command:
 FinViz_ aims to make market information accessible and provides a lot of data in visual snapshots, allowing traders and investors to quickly find the stock, future or forex pair they are looking for. The site provides advanced screeners, market maps, analysis, comparative tools, and charts.
 
 FinViz: https://finviz.com/screener.ashx
-
-## Important Information**
-
-Any quotes data displayed on finviz.com is delayed by 15 minutes for NASDAQ, and 20 minutes for NYSE and AMEX. This API should not be used for live trading, as it's main purpose is financial analysis, research, and data scraping.
