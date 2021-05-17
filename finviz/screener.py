@@ -1,3 +1,5 @@
+# This file contains the code for the unofficial FinViz API
+# This is NOT my code
 import json
 import pathlib
 import urllib.request

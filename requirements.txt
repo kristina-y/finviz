@@ -10,3 +10,4 @@ tqdm~=4.59.0
 tenacity~=7.0.0
 yfinance~=0.1.54
 multitasking~=0.0.9
+pytest

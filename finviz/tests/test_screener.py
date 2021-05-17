@@ -1,3 +1,6 @@
+# This is the test function for screener.py, which is the unofficial API
+# This is NOT my code
+
 from unittest.mock import patch
 
 import lxml
@@ -56,29 +59,6 @@ class TestScreener:
 
         assert len(stocks) == count == len(ticker_details)
 
-    @patch("finviz.screener.scrape.download_chart_image")
-    def test_get_charts_sequential_requests(self, patched_download_chart_image):
-        """ Tests that `get_charts` method returns correct number of valid charts. """
-
-        stocks = Screener(
-            filters=[
-                "sh_curvol_o20000",
-                "ta_highlow52w_b0to10h",
-                "ind_stocksonly",
-                "sh_outstanding_o1000",
-            ]
-        )
-
-        count = 0
-        for _ in stocks:
-            count += 1
-
-        stocks.get_charts()
-
-        for call in patched_download_chart_image.call_args_list:
-            assert call.kwargs["URL"]
-            assert call.args[0]
-        assert len(stocks) == count == patched_download_chart_image.call_count
 
 
 def test_get_analyst_price_targets():

@@ -1,3 +1,6 @@
+# This file contains supporting code for the screener.py
+# This is NOT my code
+
 import datetime
 
 from finviz.helper_functions.request_functions import http_request_get
