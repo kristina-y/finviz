@@ -35,7 +35,7 @@ def validate_amount(how_much_to_invest):
 def validate_timeframe(user_choice):
     if user_choice == "1":
         print("Thank you. You have indicated that you plan to invest for 1-3 months.\n")
-        return userchoice
+        return user_choice
     elif user_choice == "2":
         print("Thank you. You have indicated that you plan to invest for 3-6 months.\n")
         return user_choice
@@ -88,20 +88,24 @@ def print_output_as_table(list_of_stocks, weights):
     # weights are the mve weights that will be printed
     print("The optimal weights are:")
     print("Ticker     Weight")
+    counter = 0
     for i in list_of_stocks:
-        if len(list_of_stocks[i]) == 3:
+        if len(i) == 3:
             #printing an extra space if ticker is 3 characters
-            print(list_of_stocks[i], "      ", "{:.2%}".format(weights[i]))
+            print(i, "      ", "{:.2%}".format(weights[counter]))
         else:
-            print(list_of_stocks[i], "     ", "{:.2%}".format(weights[i]))
+            print(i, "     ", "{:.2%}".format(weights[counter]))
+        counter = counter + 1
 
 def print_output_as_dollar(list_of_stocks, weights, total):
+    counter = 0
     for i in list_of_stocks:
                     
-        if len(list_of_stocks[i]) == 3:
-            print(list_of_stocks[i], " : ", "${:,.2f}".format(weights[i] * total))
+        if len(i) == 3:
+            print(i, " : ", "${:,.2f}".format(weights[counter] * total))
         else:   
-            print(list_of_stocks[i], ": ", "${:,.2f}".format(weights[i] * total))
+            print(i, ": ", "${:,.2f}".format(weights[counter] * total))
+        counter = counter + 1
 
 
 from finviz.screener import Screener
