@@ -83,6 +83,30 @@ def narrow_down_recommendations(list_of_options):
         counter = counter + 1
     return result
 
+def print_output_as_table(list_of_stocks, weights, version, total):
+    # list of stocks is the user's chosen portfolio
+    # weights are the mve weights that will be printed
+    # if version = 1, then print just weights. if version = 2 then print $ amount
+    if version == 1:
+        print("The optimal weights are:")
+        print("Ticker     Weight")
+        for i in list_of_stocks:
+            if len(list_of_stocks[i]) == 3:
+                #printing an extra space if ticker is 3 characters
+                print(list_of_stocks[i], "      ", "{:.2%}".format(weights[i]))
+            else:
+                print(list_of_stocks[i], "     ", "{:.2%}".format(weights[i]))
+        #
+    else:
+        # printing $ amounts
+        for i in list_of_stocks:
+                    
+            if len(list_of_stocks[i]) == 3:
+                print(list_of_stocks[i], " : ", "${:,.2f}".format(weights[i] * total))
+            else:   
+                print(list_of_stocks[i], ": ", "${:,.2f}".format(weights[i] * total))
+
+
 from finviz.screener import Screener
 
 # Get dictionary of available filters
@@ -187,7 +211,7 @@ if __name__ == "__main__":
         #Asks the user if they would like to quit or proceed
         print("\nWould you like to proceed to the next step, where we will recommend what % weight to put in each equity?")
         proceed_to_suggested_weights = input("Type yes to proceed, or type anything else to quit. ")
-        if is_yes(proceed_to_suggested_weights) == True:
+        if is_yes(proceed_to_suggested_weights) == True and len(portfolio) > 1:
 
             # Run through recommended weights
             # Some of the code in this section is adapted from my Principles of Investment Class (FINC 241)
@@ -226,42 +250,20 @@ if __name__ == "__main__":
             opt_mve = sco.minimize(negative_sharpe, initial_guess, mu, bounds=bnds, constraints=cons)
             mve_weights=opt_mve['x']
 
-                
-
-            # Need to print output with weights
             portfolio.sort()
 
-            i = 0
-            print("The optimal weights are:")
-            print("Ticker     Weight")
-            while i < noa:
-                    
-                if len(portfolio[i]) == 3:
-                    #printing an extra space if ticker is 3 characters
-                    print(portfolio[i], "      ", "{:.2%}".format(mve_weights[i]))
-                else:
-                    print(portfolio[i], "     ", "{:.2%}".format(mve_weights[i]))
-
-                i = i + 1
+            # Printing output with weights
+            print_output_as_table(portfolio, mve_weights, 1, amount)
                 
             # Will also give return and volatility
-            mve_ret = np.dot(mve_weights, mu)
-                
-            mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))
-                
+            mve_ret = np.dot(mve_weights, mu)  
+            mve_vol = np.sqrt(np.dot(mve_weights,np.dot(VarCov, mve_weights.T)))  
             print("\nBased on past returns, you may expect a return of anywhere up to ", "{:.2%}".format(mve_ret), "and a volatility of ", "{:.2%}".format(mve_vol), "\n")
 
-            print("If you choose to use our recommended weights, then you should invest the following $ in each security:")
-            i = 0
-                
-            while i < noa:
-                    
-                if len(portfolio[i]) == 3:
-                    print(portfolio[i], " : ", "${:,.2f}".format(mve_weights[i] * amount))
-                else:   
-                    print(portfolio[i], ": ", "${:,.2f}".format(mve_weights[i] * amount))
 
-                i = i + 1
+            print("If you choose to use our recommended weights, then you should invest the following $ in each security:")
+                
+            print_output_as_table(portfolio, mve_weights, 2, amount)
 
 
             print("\nThank you for using the short term robo advisor. Best of luck!")
@@ -269,7 +271,10 @@ if __name__ == "__main__":
 
 
         else:
-            print("\nThank you for using the program. Goodbye.")
+            if len(portfolio) < 1:
+                print("The portfolio must have at least two stocks in it to determine optimal weightings. Sorry about that.")
+            else:
+                print("\nThank you for using the program. Goodbye.")
 
     else:
         print("\nThank you for using the program. Goodbye.")
