@@ -24,9 +24,9 @@ Next, install the required packages:
 
 Run the program using the following command:
 
-    ```sh
+    
     python robo_advisor.py
-    ```
+    
 
 ## What is Finviz?
 
