@@ -180,13 +180,14 @@ if proceed == "Yes" or proceed == "yes":
         print("Would you like to add any securities to your portfolio?")
         add = input("Type yes to add securities, or no to keep the portfolio as is. ")
         if add == "yes" or add == "Yes" or add == "Y" or add == "y":
-            while add != "no" or add != "No":
+            while add == "yes" or add == "Yes":
                 new = input("Please type the ticker of the security that you would like to add to your portfolio: ")
                 portfolio.append(new)
                 print("... Successfully added", new, "to the portfolio.")
                 print(" ")
                 add = input("Would you like to add another security to your portfolio? Type 'yes' or 'no'. ")
-                if add == "no" or "No":
+                if add == "no" or add == "No":
+                    
                     break
 
         #Asks the user if they would like to quit or proceed
