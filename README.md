@@ -10,14 +10,14 @@ Fork [this remote repository] (https://github.com/kristina-y/finviz) under your 
 
 Next, navigate to the appropriate command line from the command line (subsequent commands assume you are running them from the local repository's root directory):
 
-    ```sh
+    
     cd finviz
-    ```
+    
 Next, install the required packages:
 
-    ```sh
+    
     pip install -r requirements.txt
-    ```
+    
 
 
 ## Usage
