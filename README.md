@@ -9,10 +9,12 @@ This program is Kristina Yarovinsky's final project. The program gives the user 
 Fork [this remote repository] (https://github.com/kristina-y/finviz) under your own control, then "clone" or download your remote copy onto your local computer.
 
 Next, navigate to the appropriate command line from the command line (subsequent commands assume you are running them from the local repository's root directory):
+
     ```sh
     cd finviz
     ```
 Next, install the required packages:
+
     ```sh
     pip install -r requirements.txt
     ```
@@ -21,6 +23,7 @@ Next, install the required packages:
 ## Usage
 
 Run the program using the following command:
+
     ```sh
     python robo_advisor.py
     ```
